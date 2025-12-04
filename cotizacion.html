@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotización - Aromy Essence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #87CEEB, #1E3A8A);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 32px;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+
+        .back-btn i {
+            margin-right: 8px;
+        }
+
+        .back-btn:hover {
+            color: #FFD700;
+        }
+
+        /* Contenido principal */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .quote-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-container:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #87CEEB, #1E3A8A, #FFD700, #8B0000);
+        }
+
+        .quote-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quote-header h1 {
+            color: #1E3A8A;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .quote-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* Formulario de cotización */
+        .quote-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #1E3A8A;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1E3A8A;
+            box-shadow: 0 0 0 2px rgba(30, 58, 138, 0.2);
+            background-color: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* Productos */
+        .products-selection {
+            grid-column: 1 / -1;
+            margin-bottom: 20px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .product-option {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: white;
+        }
+
+        .product-option:hover {
+            border-color: #1E3A8A;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-option.selected {
+            border-color: #1E3A8A;
+            background-color: rgba(30, 58, 138, 0.05);
+        }
+
+        .product-icon {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #1E3A8A;
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .product-price {
+            color: #8B0000;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Estilos específicos para cada aroma */
+        .product-option[data-product="cafe"] .product-icon {
+            color: #6F4E37;
+        }
+
+        .product-option[data-product="lavanda"] .product-icon {
+            color: #967bb6;
+        }
+
+        .product-option[data-product="naranja"] .product-icon {
+            color: #FFA500;
+        }
+
+        .product-option[data-product="menta"] .product-icon {
+            color: #3CB371;
+        }
+
+        .product-option[data-product="fresa"] .product-icon {
+            color: #C2185B;
+        }
+
+        .product-option[data-product="limon"] .product-icon {
+            color: #FFEB3B;
+        }
+
+        /* Información de envío */
+        .shipping-info {
+            grid-column: 1 / -1;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 10px;
+            border-left: 4px solid #1E3A8A;
+        }
+
+        .shipping-info h3 {
+            color: #1E3A8A;
+            margin-bottom: 10px;
+        }
+
+        .shipping-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .shipping-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .shipping-icon {
+            color: #1E3A8A;
+            font-size: 18px;
+        }
+
+        /* Resumen de cotización */
+        .quote-summary {
+            grid-column: 1 / -1;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #1E3A8A;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 2px solid #1E3A8A;
+            color: #1E3A8A;
+        }
+
+        .discount-note {
+            background-color: #fff8e1;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+            border-left: 3px solid #FFD700;
+        }
+
+        /* Botones */
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1E3A8A, #87CEEB);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(30, 58, 138, 0.9);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .social-icons {
+            margin: 20px 0;
+        }
+
+        .social-icons a {
+            color: white;
+            margin: 0 10px;
+            font-size: 20px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: #FFD700;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .quote-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .quote-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-spa"></i>
+                Aromy Essence
+            </div>
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                Volver al Inicio
+            </a>
+        </header>
+    </div>
+
+    <main>
+        <div class="container">
+            <div class="quote-container">
+                <div class="quote-header">
+                    <h1>Solicita tu Cotización</h1>
+                    <p>Completa el formulario para recibir una cotización personalizada de nuestros llaveros aromáticos</p>
+                </div>
+
+                <form id="quoteForm" class="quote-form">
+                    <!-- Información personal -->
+                    <div class="form-group">
+                        <label for="nombre">Nombre completo *</label>
+                        <input type="text" id="nombre" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="empresa">Empresa (opcional)</label>
+                        <input type="text" id="empresa">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Correo electrónico *</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono *</label>
+                        <input type="tel" id="telefono" required>
+                    </div>
+
+                    <!-- Selección de productos -->
+                    <div class="form-group full-width products-selection">
+                        <label>Selecciona los aromas de interés *</label>
+                        <div class="products-grid">
+                            <div class="product-option" data-product="cafe">
+                                <div class="product-icon"><i class="fas fa-coffee"></i></div>
+                                <div class="product-name">Café</div>
+                                <div class="product-price">$35 MXN</div>
+                            </div>
+                            <div class="product-option" data-product="lavanda">
+                                <div class="product-icon"><i class="fas fa-spa"></i></div>
+                                <div class="product-name">Lavanda</div>
+                                <div class="product-price">$35 MXN</div>
+                            </div>
+                            <div class="product-option" data-product="naranja">
+                                <div class="product-icon"><i class="fas fa-lemon"></i></div>
+                                <div class="product-name">Naranja</div>
+                                <div class="product-price">$35 MXN</div>
+                            </div>
+                            <div class="product-option" data-product="menta">
+                                <div class="product-icon"><i class="fas fa-leaf"></i></div>
+                                <div class="product-name">Menta</div>
+                                <div class="product-price">$35 MXN</div>
+                            </div>
+                            <div class="product-option" data-product="fresa">
+                                <div class="product-icon"><i class="fas fa-heart"></i></div>
+                                <div class="product-name">Fresa</div>
+                                <div class="product-price">$35 MXN</div>
+                           
+                        </div>
+                        <input type="hidden" id="selected-products">
+                    </div>
+
+                    <!-- Cantidad y entrega -->
+                    <div class="form-group">
+                        <label for="cantidad">Cantidad aproximada *</label>
+                        <input type="number" id="cantidad" min="1" value="1" required>
+                        <small style="color: #666; display: block; margin-top: 5px;">Precio unitario: $45 MXN</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipo-envio">Tipo de envío *</label>
+                        <select id="tipo-envio" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="recoger">Recoger en persona (sin costo)</option>
+                            <option value="estandar">Envío estándar (3-5 días hábiles)</option>
+                            <option value="express">Envío express (24-48 horas)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-entrega">Fecha deseada de entrega</label>
+                        <input type="date" id="fecha-entrega">
+                    </div>
+
+                    <!-- Información de envío -->
+                    <div class="form-group full-width shipping-info">
+                        <h3><i class="fas fa-shipping-fast"></i> Información de Envío</h3>
+                        <div class="shipping-details">
+                            <div class="shipping-item">
+                                <div class="shipping-icon"><i class="fas fa-box"></i></div>
+                                <div>
+                                    <strong>Recoger en persona</strong>
+                                    <div>Sin costo adicional</div>
+                                </div>
+                            </div>
+                            <div class="shipping-item">
+                                <div class="shipping-icon"><i class="fas fa-truck"></i></div>
+                                <div>
+                                    <strong>Envío estándar</strong>
+                                    <div>3-5 días hábiles</div>
+                                </div>
+                            </div>
+                            <div class="shipping-item">
+                                <div class="shipping-icon"><i class="fas fa-rocket"></i></div>
+                                <div>
+                                    <strong>Envío express</strong>
+                                    <div>24-48 horas</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="discount-note" style="margin-top: 15px;">
+                            <i class="fas fa-percentage"></i> <strong>Descuentos en envío:</strong> 2% de descuento cada 10 unidades hasta 40 unidades (envío gratis a partir de 40 unidades)
+                        </div>
+                    </div>
+
+                    <!-- Mensaje adicional -->
+                    <div class="form-group full-width">
+                        <label for="mensaje">Mensaje adicional o requisitos especiales</label>
+                        <textarea id="mensaje" rows="4" placeholder="Describe cualquier requisito especial, diseño específico, o información adicional que debamos conocer..."></textarea>
+                    </div>
+
+                    <!-- Resumen de cotización -->
+                    <div class="form-group full-width quote-summary">
+                        <h3>Resumen de Cotización</h3>
+                        <div class="summary-item">
+                            <span>Aromas seleccionados:</span>
+                            <span id="summary-products">-</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Cantidad:</span>
+                            <span id="summary-quantity">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Precio unitario:</span>
+                            <span>$35 MXN</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Subtotal:</span>
+                            <span id="summary-subtotal">$0 MXN</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Envío:</span>
+                            <span id="summary-shipping">$0 MXN</span>
+                        </div>
+                        <div class="summary-item" id="discount-container" style="display: none;">
+                            <span>Descuento en envío:</span>
+                            <span id="summary-discount">$0 MXN</span>
+                        </div>
+                        <div class="summary-total">
+                            <span>Total estimado:</span>
+                            <span id="summary-total">$0 MXN</span>
+                        </div>
+                       
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i>
+                            Limpiar Formulario
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Enviar Solicitud de Cotización
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <h2>Aromy Essence</h2>
+                <p>Tu esencia siempre contigo</p>
+                <div class="social-icons">
+                    <a href="https://instagram.com/aromy_essence" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+                <div class="contact-info">
+                    <div><strong>Instagram:</strong> @aromy_essence</div>
+                    <div><strong>Teléfono:</strong> 272 708 3319</div>
+               
+                </div>
+                <p>&copy; 2025 Aromy Essence. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Selección de productos
+        document.querySelectorAll('.product-option').forEach(option => {
+            option.addEventListener('click', function() {
+                this.classList.toggle('selected');
+                updateSelectedProducts();
+                updateQuoteSummary();
+            });
+        });
+
+        // Actualizar productos seleccionados
+        function updateSelectedProducts() {
+            const selectedProducts = [];
+            document.querySelectorAll('.product-option.selected').forEach(product => {
+                selectedProducts.push(product.getAttribute('data-product'));
+            });
+            document.getElementById('selected-products').value = selectedProducts.join(',');
+        }
+
+        // Calcular costo de envío según tipo y cantidad
+        function calculateShipping(quantity, shippingType) {
+            // Precios base de envío
+            const baseShipping = {
+                'estandar': 120,
+                'express': 145
+            };
+            
+            // Si el pedido es de 40+ unidades, envío gratis
+            if (quantity >= 40) return 0;
+            
+            // Si es recoger en persona, sin costo
+            if (shippingType === 'recoger') return 0;
+            
+            // Si no es un tipo de envío con costo, retornar 0
+            if (!baseShipping[shippingType]) return 0;
+            
+            // Calcular descuento progresivo (2% cada 10 unidades)
+            const discountTiers = Math.min(Math.floor(quantity / 10), 3); // Máximo 3 niveles (30 unidades)
+            const discountPercentage = discountTiers * 2; // 2% por cada nivel
+            
+            // Aplicar descuento al precio base
+            const basePrice = baseShipping[shippingType];
+            const discountedPrice = basePrice * (1 - discountPercentage / 100);
+            
+            return discountedPrice;
+        }
+
+        // Obtener descuento aplicado
+        function getShippingDiscount(quantity, shippingType) {
+            // Precios base de envío
+            const baseShipping = {
+                'estandar': 120,
+                'express': 145
+            };
+            
+            // Si no hay envío o no aplica descuento, retornar 0
+            if (quantity >= 40 || shippingType === 'recoger' || !baseShipping[shippingType]) return 0;
+            
+            // Calcular descuento progresivo (2% cada 10 unidades)
+            const discountTiers = Math.min(Math.floor(quantity / 10), 3); // Máximo 3 niveles (30 unidades)
+            const discountPercentage = discountTiers * 2; // 2% por cada nivel
+            
+            // Calcular monto del descuento
+            const basePrice = baseShipping[shippingType];
+            const discountAmount = basePrice * (discountPercentage / 100);
+            
+            return discountAmount;
+        }
+
+        // Actualizar resumen de cotización
+        function updateQuoteSummary() {
+            // Productos seleccionados
+            const selectedProducts = document.querySelectorAll('.product-option.selected');
+            const productNames = Array.from(selectedProducts).map(product => {
+                return product.querySelector('.product-name').textContent;
+            });
+            document.getElementById('summary-products').textContent = productNames.join(', ') || '-';
+            
+            // Cantidad
+            const quantity = parseInt(document.getElementById('cantidad').value) || 0;
+            document.getElementById('summary-quantity').textContent = quantity;
+            
+            // Tipo de envío
+            const shippingType = document.getElementById('tipo-envio').value;
+            
+            // Cálculos de precio
+            const unitPrice = 35;
+            const subtotal = quantity * unitPrice * (selectedProducts.length || 1);
+            const shippingCost = calculateShipping(quantity, shippingType);
+            const discountAmount = getShippingDiscount(quantity, shippingType);
+            const total = subtotal + shippingCost;
+            
+            // Actualizar elementos del resumen
+            document.getElementById('summary-subtotal').textContent = '$' + subtotal.toFixed(2) + ' MXN';
+            document.getElementById('summary-shipping').textContent = '$' + shippingCost.toFixed(2) + ' MXN';
+            document.getElementById('summary-total').textContent = '$' + total.toFixed(2) + ' MXN';
+            
+            // Mostrar u ocultar descuento
+            const discountContainer = document.getElementById('discount-container');
+            const discountElement = document.getElementById('summary-discount');
+            
+            if (discountAmount > 0) {
+                discountContainer.style.display = 'flex';
+                discountElement.textContent = '-$' + discountAmount.toFixed(2) + ' MXN';
+            } else {
+                discountContainer.style.display = 'none';
+            }
+        }
+
+        // Actualizar resumen cuando cambian los campos
+        document.getElementById('cantidad').addEventListener('input', updateQuoteSummary);
+        document.getElementById('tipo-envio').addEventListener('change', updateQuoteSummary);
+
+        // Manejo del envío del formulario
+        document.getElementById('quoteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validación básica
+            const selectedProducts = document.querySelectorAll('.product-option.selected');
+            if (selectedProducts.length === 0) {
+                alert('Por favor, selecciona al menos un aroma.');
+                return;
+            }
+            
+            const quantity = parseInt(document.getElementById('cantidad').value);
+            if (quantity < 1) {
+                alert('Por favor, ingresa una cantidad válida.');
+                return;
+            }
+            
+            const shippingType = document.getElementById('tipo-envio').value;
+            if (!shippingType) {
+                alert('Por favor, selecciona un tipo de envío.');
+                return;
+            }
+            
+            // Simular envío (en un caso real, aquí se enviarían los datos al servidor)
+            const productNames = Array.from(selectedProducts).map(product => {
+                return product.querySelector('.product-name').textContent;
+            }).join(', ');
+            
+            alert(`¡Gracias por tu solicitud de cotización!\n\nAromas seleccionados: ${productNames}\nCantidad: ${quantity}\nTipo de envío: ${document.getElementById('tipo-envio').options[document.getElementById('tipo-envio').selectedIndex].text}\n\nHemos recibido tu información y nos pondremos en contacto contigo en un plazo de 24 horas.`);
+            
+            // Limpiar formulario después del envío
+            this.reset();
+            document.querySelectorAll('.product-option.selected').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            updateQuoteSummary();
+        });
+
+        // Establecer fecha mínima para entrega (3 días a partir de hoy)
+        const today = new Date();
+        const minDate = new Date(today);
+        minDate.setDate(today.getDate() + 3);
+        
+        const minDateString = minDate.toISOString().split('T')[0];
+        document.getElementById('fecha-entrega').min = minDateString;
+
+        // Inicializar resumen
+        updateQuoteSummary();
+    </script>
+</body>
+</html>
